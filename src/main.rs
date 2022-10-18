@@ -22,6 +22,20 @@ impl Contains for Manufacturer {
     }
 }
 
-fn main() {
-    println!("Hello, world!");
+impl<'a> Manufacturer<'a> {
+    fn description(&self) -> String {
+        let name = self.name.unwrap_or_default();
+        let common_name = self.common_name.unwrap_or_default();
+        let country = self.country.unwrap_or_default();
+
+        format!(
+            "\tName: {}\n\tCommon Name: {}\n\tCountry: {}",
+            name, common_name, country
+        )
+    }
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    Ok(())
 }
