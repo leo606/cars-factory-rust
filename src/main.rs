@@ -37,5 +37,22 @@ impl<'a> Manufacturer<'a> {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() < 2 {
+        println!("Usage: {} <search term>", args[0])
+    }
+
+    let keyword = &args[1];
+
+    let client = reqwest::Client::new();
+
+    let foo = client
+        .get(API_URL)
+        .send()
+        .await
+        .json::<serde_json::Value>()
+        .await?;
+
     Ok(())
 }
