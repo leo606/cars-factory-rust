@@ -47,12 +47,42 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let client = reqwest::Client::new();
 
-    let foo = client
+    let res = client
         .get(API_URL)
         .send()
         .await?
         .json::<serde_json::Value>()
         .await?;
+    
+    let cars = res
+        .as_object()
+        .unwrap()
+        .iter()
+        .find(|(key, _)| key == &"Results")
+        .unwrap()
+        .1
+        .as_array()
+        .unwrap()
+        .iter();
+
+    let manufactures = cars.map(|manufacturer| {
+        let data = manufacturer.as_object().unwrap();
+        let country = data.get("Country").unwrap().as_str();
+        let name = data.get("Mfr_CommonName").unwrap().as_str();
+        let common_name = data.get("Mfr_Name").unwrap().as_str();
+
+        Manufacturer {
+            name,
+            common_name,
+            country
+        }
+    });
+
+    for manu in manufactures {
+        println!();
+        println!("{}", manu.description())
+    }
+
 
     Ok(())
 }
