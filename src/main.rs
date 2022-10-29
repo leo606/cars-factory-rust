@@ -14,7 +14,7 @@ trait Contains {
     fn constains(&self, needle: &str) -> bool;
 }
 
-impl Contains for Manufacturer {
+impl<'a> Contains for Manufacturer<'a> {
     fn constains(&self, needle: &str) -> bool {
         self.name.unwrap_or_default().contains(needle)
             || self.common_name.unwrap_or_default().contains(needle)
@@ -50,7 +50,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let foo = client
         .get(API_URL)
         .send()
-        .await
+        .await?
         .json::<serde_json::Value>()
         .await?;
 
