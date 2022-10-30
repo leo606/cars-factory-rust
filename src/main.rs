@@ -65,7 +65,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap()
         .iter();
 
-    let manufactures = cars.map(|manufacturer| {
+    let mut manufactures = cars.map(|manufacturer| {
         let data = manufacturer.as_object().unwrap();
         let country = data.get("Country").unwrap().as_str();
         let name = data.get("Mfr_CommonName").unwrap().as_str();
@@ -78,10 +78,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     });
 
-    for manu in manufactures {
-        println!();
-        println!("{}", manu.description())
-    }
+    let finded = manufactures.find(|manu|manu.constains(keyword)).unwrap();
+
+    println!("{}", finded.description());
 
 
     Ok(())
